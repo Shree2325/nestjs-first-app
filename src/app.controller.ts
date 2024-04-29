@@ -1,11 +1,11 @@
-import { Body, Controller, Get ,Param,Post, Query, Req, Res  } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get ,Param,Post, Query, Req, Res  } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AnswerDto } from './dto/app.dto';
-import { stat } from 'fs';
+import { SumserviceService } from './sumservice/sumservice.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService,private sumService:SumserviceService) {}
 
   @Get()
   getHello(@Req() req, @Res() res) {
@@ -42,6 +42,13 @@ export class AppController {
   // getId(@Param('id') id):string{
   //   return `${id}`;
   // }
+
+  @Post('/sum')
+  getSum(@Body() numbers:AnswerDto , @Req() req , @Res() res){
+    if(numbers.num1 != null && numbers.num2 != null)  return res.status(200).json({res :  this.sumService.calculateSum(numbers.num1,numbers.num2)});
+    throw new BadRequestException();
+  }
+
 
  
 
